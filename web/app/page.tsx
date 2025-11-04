@@ -1,30 +1,37 @@
-"use client";
-import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
-import { DotScreenShader } from "@/components/ui/dot-shader-background";
-export default function Home() {
+'use client'
+
+import { SplineScene } from "@/components/ui/splite";
+import { Card } from "@/components/ui/card"
+import { Spotlight } from "@/components/ui/spotlight"
+ 
+export function SplineSceneBasic() {
   return (
-    <>
-      <div className="h-svh w-screen flex flex-col gap-4 md:gap-6 items-center justify-center relative px-4">
-        <div className="absolute inset-0">
-          <DotScreenShader />
+    <Card className="w-full h-[500px] bg-black/[0.96] relative overflow-hidden">
+      <Spotlight
+        className="-top-40 left-0 md:left-60 md:-top-20"
+        fill="white"
+      />
+      
+      <div className="flex h-full">
+        {/* Left content */}
+        <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
+            Interactive 3D
+          </h1>
+          <p className="mt-4 text-neutral-300 max-w-lg">
+            Bring your UI to life with beautiful 3D scenes. Create immersive experiences 
+            that capture attention and enhance your design.
+          </p>
         </div>
-        <h1 className="text-6xl md:text-7xl font-light tracking-tight mix-blend-exclusion text-white whitespace-nowrap pointer-events-none">
-          KUMA AI
-        </h1>
-        <p className="text-lg md:text-xl font-light text-center text-white mix-blend-exclusion max-w-2xl leading-relaxed pointer-events-none">
-          Força bruta. Mente estratégica.
-        </p>
-        <div>
-          <DatabaseWithRestApi title= "O algoritmo da força está pronto. Monte seu treino"
-            badgeTexts={{
-              first: "Treino",
-              second: "Foco",
-              third: "Força",
-              fourth: "Kuma",
-            }}
+
+        {/* Right content */}
+        <div className="flex-1 relative">
+          <SplineScene 
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            className="w-full h-full"
           />
         </div>
       </div>
-    </>
-  );
+    </Card>
+  )
 }
