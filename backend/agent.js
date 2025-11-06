@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { Ollama } from "ollama";
 import rulesSystem from "./rulesSystem.js";
 
-export default async function agent() {
+export default async function agent(prompt) {
   dotenv.config();
 
   const ollama = new Ollama({
@@ -16,8 +16,8 @@ export default async function agent() {
     const response = await ollama.chat({
       model: "gpt-oss:120b-cloud",
       messages: [
-        { role: "user", content: rulesSystem() }, // envia o prompt
-      ],
+        { role: "user", content: rulesSystem(prompt) }, // envia o prompt
+      ],  
     });
 
     return response.message.content;
