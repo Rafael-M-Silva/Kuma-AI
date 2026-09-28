@@ -1,150 +1,65 @@
-# 🧠 KUMA AI – Personal Trainer Inteligente
+# Kuma AI
 
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Ollama](https://img.shields.io/badge/Ollama-AI-black?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-Em_Desenvolvimento-yellow?style=for-the-badge)
+Protótipo de interface para gerar uma ficha de treino de força em Markdown a partir de nome, idade, peso e altura informados pelo usuário.
 
----
+## Sobre o projeto
 
-## 💡 Sobre o Projeto
+O projeto separa uma interface em Next.js de uma API em Express. O formulário envia os dados para <code>POST /treino</code>; o backend monta instruções para o modelo da Ollama e devolve texto para a interface renderizar.
 
-**KUMA AI** é um **agente de inteligência artificial** desenvolvido para **gerar fichas de treino personalizadas na musculação**, com base nos **dados e objetivos do usuário**.
+O prompt pede uma divisão em treinos A, B e C. A resposta depende do modelo e da configuração local; não há armazenamento de fichas nem autenticação.
 
-O sistema utiliza o **Ollama LLM (Large Language Model)** em conjunto com um backend em **Node.js** e interface **Next.js + TypeScript**, criando uma experiência imersiva e interativa para atletas e entusiastas do fitness.
+## Tecnologias e estrutura
 
----
+- **Interface:** Next.js, React, TypeScript, Tailwind CSS, React Markdown e Lucide.
+- **API:** Node.js, Express, CORS, dotenv e cliente Ollama.
 
-## 🧩 Objetivo
+~~~text
+backend/
+  agent.js          chamada ao modelo
+  rulesSystem.js    instruções de treino
+  server.js         rota HTTP
+  package.json
+web/
+  app/page.tsx      formulário e exibição da resposta
+  package.json
+README.md
+~~~
 
-O objetivo é simplificar o processo de montagem de treinos de força e hipertrofia, permitindo que o usuário informe:
-- Nome  
-- Idade  
-- Peso  
-- Altura  
+## Como executar
 
-e receba automaticamente uma **ficha de treino estruturada em Markdown**, contendo:
-- Treino A, B e C  
-- Séries, repetições e tempo de descanso  
-- Dicas de execução  
-- Mensagem motivacional  
+É necessário Node.js, npm e uma instância da Ollama acessível em <code>http://localhost:11434</code> com o modelo <code>gpt-oss:120b-cloud</code> configurado. O frontend e o backend devem rodar localmente, pois os endereços estão fixos no código.
 
----
+Clone o repositório e instale as dependências da API:
 
-## ⚙️ Tecnologias Utilizadas
-
-### Front-End
-- **Next.js (App Router)**
-- **TypeScript**
-- **React Markdown + remark-gfm**
-- **TailwindCSS + Shadcn UI**
-- **Lucide Icons**
-
-### Back-End
-- **Node.js + Express**
-- **Ollama API** (modelo `gpt-oss:120b-cloud`)
-- **CORS e dotenv**
-
----
-
-## 🧠 Estrutura do Projeto
-
-```
-
-/Kuma-AI
-├── web/                # Front-end (Next.js + TypeScript)
-│   ├── app/
-│   ├── components/
-│   └── ...
-├── backend/            # Servidor Node.js (Express + Ollama)
-│   ├── agent.js
-│   ├── rulesSystem.js
-│   ├── dadosUser.js
-│   └── server.js
-├── .gitignore
-└── README.md
-
-````
-
----
-
-## 🚀 Como Rodar o Projeto
-
-### 🖥️ 1. Clone o repositório:
-```bash
+~~~bash
 git clone https://github.com/Rafael-M-Silva/Kuma-AI.git
-````
+cd Kuma-AI/backend
+npm ci
+node server.js
+~~~
 
-### ⚙️ 2. Instale as dependências:
+O backend escuta em <code>http://localhost:3333</code>. O código lê <code>OLLAMA_API_KEY</code> de <code>backend/.env</code> para autenticação quando necessária. Não versione esse arquivo ou uma chave real. O <code>package.json</code> do backend não possui script <code>start</code>; por isso o comando é <code>node server.js</code>.
 
-Front-end:
+Em outro terminal, a partir da raiz do repositório:
 
-```bash
+~~~bash
 cd web
-npm install
-```
-
-Back-end:
-
-```bash
-cd backend
-npm install
-```
-
-### 🧩 3. Configure o arquivo `.env`:
-
-```env
-OLLAMA_API_KEY=sua_chave_aqui
-```
-
-### ▶️ 4. Execute o projeto:
-
-**Backend:**
-
-```bash
-npm run start
-```
-
-**Frontend:**
-
-```bash
+npm ci
 npm run dev
-```
+~~~
 
-Acesse em:
-🔗 **[http://localhost:3000](http://localhost:3000)**
+Abra [http://localhost:3000](http://localhost:3000). A interface envia o formulário para <code>http://localhost:3333/treino</code>.
 
----
+## Estado atual e limites
 
-## 🧬 Como Funciona
+Há uma inconsistência no encadeamento do prompt: <code>server.js</code> chama <code>rulesSystem(nome, idade, peso, altura)</code> e <code>agent.js</code> chama <code>rulesSystem(prompt)</code> novamente. Isso pode fazer idade, peso e altura chegarem como indefinidos à mensagem enviada ao modelo. O README registra esse estado; a correção exige uma alteração de código separada da organização documental.
 
-1. O usuário preenche o formulário com nome, idade, peso e altura.
-2. O front envia os dados via `POST` para o servidor Node.
-3. O backend constrói um prompt personalizado com base nas informações.
-4. O **Ollama LLM** gera a ficha de treino completa em formato Markdown.
-5. O conteúdo é renderizado no front com destaque e estilização.
+A configuração atual de CORS permite apenas a origem <code>http://localhost:3000</code>. Não há URL pública de demonstração registrada no repositório.
 
----
+## Aprendizados
 
-## 🦾 Funcionalidades Atuais
+O projeto demonstra formulário em React, comunicação HTTP entre frontend e backend, integração com LLM e renderização de Markdown.
 
-✅ Geração automática de treino com IA
-✅ Integração entre front e back
-✅ Layout responsivo e moderno
-✅ Exibição formatada com Markdown
-✅ Loading com ícone animado
-✅ Tratamento de erros e feedback ao usuário
+## Autor
 
----
-
-## 👨‍💻 Autor
-
-**Rafael Mauricio da Silva**
-[![GitHub](https://img.shields.io/badge/GitHub-Rafael--M--Silva-000?style=flat\&logo=github)](https://github.com/Rafael-M-Silva)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Rafael%20Silva-0A66C2?style=flat\&logo=linkedin)](https://linkedin.com/in/rafael-mauricio-silva)
-
-Professor de ADS | Desenvolvedor Front-End |
-
-Quer que eu adicione uma **imagem de capa** (mockup da interface KUMA AI com fundo escuro e energia âmbar) no topo do README? Isso deixa o repositório muito mais chamativo visualmente para o GitHub.
-```
+**Rafael Mauricio (Bigode)** · [GitHub](https://github.com/Rafael-M-Silva) · [LinkedIn](https://linkedin.com/in/rafael-mauricio-dev/) · [Bigode Ensina](https://bigodeensina.com.br/)
